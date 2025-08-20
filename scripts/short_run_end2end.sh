@@ -34,7 +34,6 @@ echo ""
 echo "Step 2/4: Analyzing classical results..."
 echo "----------------------------------------"
 julia --threads=4 --project=Model8 notebooks/analyze_task5a_deep_winner.jl test_classical $YYMMDD simplex
-# julia --threads=4 --project=Model8 notebooks/analyze_learning.jl test_classical $YYMMDD simplex
 
 echo ""
 echo "Step 3/4: Running corduroy learning..."
@@ -55,7 +54,4 @@ echo "========================================"
 echo "✓ End-to-end test completed successfully!"
 echo "========================================"
 echo ""
-echo "Generated files:"
-echo "- Plots saved to: $(julia --project=Model8 -e 'using JunTools; println(JunTools.get_plot_path("TCRPulsing"))')"
-echo ""
-echo "To run this test again: ./test_end2end.sh"
+

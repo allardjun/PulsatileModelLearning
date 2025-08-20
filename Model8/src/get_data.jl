@@ -2,9 +2,10 @@
 # For now, just run it in the repl...
 
 function get_data(; save_data=false)
-    base_path = JunTools.get_base_path("TCRPulsing")
-
-    @show base_path
+    
+    base_path = ""
+    # base_path = JunTools.get_base_path("TCRPulsing")
+    # @show base_path
 
     ## Read in xlsx from supplemeental material of Harris James 2020. 
 

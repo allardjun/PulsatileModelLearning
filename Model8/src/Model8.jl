@@ -1,6 +1,6 @@
 module Model8
 
-using JunTools
+# using JunTools
 using XLSX
 using Statistics
 using JLD2
@@ -50,7 +50,8 @@ include("ModelConversion.jl")
 using .FlexiFunctions
 using .ModelConversion
 
-base_path = JunTools.get_base_path("TCRPulsing")
+base_path = ""
+# base_path = JunTools.get_base_path("TCRPulsing")
 
 #export base_path
 
