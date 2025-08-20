@@ -1,0 +1,33 @@
+# Test configuration for corduroy learning tasks
+# Reduced iterations for end-to-end testing
+
+run_name = "test_corduroy" # overridden by batch script
+
+model_name = "ModelF8"
+
+# REDUCED iterations for testing
+maxiters_bb = 0           # Skip BBO for corduroy
+maxiters_simplex = 100     # Instead of 100
+maxiters_cmaes = 3        # Instead of 30
+maxiters_outer = 3        # Instead of 5
+
+# Flexi parameters
+flexi_dofs = 40
+
+# Default on_times_indexes (overridden by args)
+these_on_time_indexes = [6]
+
+# Mask settings
+mask_id = 0 # use mask_pairs for non-sweep tasks
+mask_pairs = [] # no masking for most runs
+
+continuous_pulses = false
+loss_strategy = "masked_normalized"
+
+# Initial guess from classical results
+# NOTE: data_date will be updated by test script
+[ig_for_cmaes]
+data_date = "REPLACE_WITH_TEST_CLASSICAL_DATE"
+model_name = "MyModel8" 
+run_name_base = "test_classical"
+these_on_time_indexes = [6]

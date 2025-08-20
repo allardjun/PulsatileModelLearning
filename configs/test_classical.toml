@@ -1,0 +1,20 @@
+# Test configuration for classical learning tasks
+# Reduced iterations for end-to-end testing
+
+run_name = "test_classical" 
+
+model_name = "MyModel8"
+
+# REDUCED iterations for testing
+maxiters_bb = 2000        # Instead of 100000
+maxiters_simplex = 200     # Instead of 1000
+
+# Default on_times_indexes (overridden by args)
+these_on_time_indexes = [6]
+
+# Mask settings
+mask_id = 0 # use mask_pairs
+mask_pairs = [] # no masking for classical runs
+
+continuous_pulses = false
+loss_strategy = "masked_normalized"
