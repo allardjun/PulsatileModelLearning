@@ -24,8 +24,8 @@ Create a frequency response plot showing model fit vs experimental data.
 
 # Example
 ```julia
-p_all = Model8.derepresent_all(best_p_repr, learning_problem.model)
-fig = Model8.plot_frequency_response(learning_problem, p_all)
+p_all = PulsatileModelLearning.derepresent_all(best_p_repr, learning_problem.model)
+fig = PulsatileModelLearning.plot_frequency_response(learning_problem, p_all)
 display(fig)
 save("frequency_response.pdf", fig)
 ```
@@ -150,7 +150,7 @@ Create a frequency response comparison plot between two models.
 
 # Example
 ```julia
-fig = Model8.plot_frequency_response_comparison(
+fig = PulsatileModelLearning.plot_frequency_response_comparison(
     classical_learning_problem, classical_p_all, "Classical",
     flexi_learning_problem, flexi_p_all, "Flexi"
 )
@@ -295,10 +295,10 @@ Maintains backward compatibility with existing code that uses analysis["figs"].
 
 # Example
 ```julia
-_, analysis = Model8.get_freq_response(...; make_timeseries=true, get_extrema=true)
-p_all = Model8.derepresent_all(best_p_repr, model)
+_, analysis = PulsatileModelLearning.get_freq_response(...; make_timeseries=true, get_extrema=true)
+p_all = PulsatileModelLearning.derepresent_all(best_p_repr, model)
 
-results = Model8.process_and_save_timeseries_figures(analysis, p_all) do i, fig
+results = PulsatileModelLearning.process_and_save_timeseries_figures(analysis, p_all) do i, fig
     save("timeseries_\$i.pdf", fig)
     save("movie/frame_\$i.png", fig)  # Can save to multiple locations
 end
@@ -511,7 +511,7 @@ Create a regulator comparison plot between classical and flexi models.
 
 # Example
 ```julia
-fig = Model8.plot_regulator_comparison(
+fig = PulsatileModelLearning.plot_regulator_comparison(
     classical_p_all, "Model 6",
     flexi_p_repr, "ModelF6"
 )
@@ -605,7 +605,7 @@ function plot_regulator_comparison(classical_p_all, classical_label, flexi_p_rep
             if contains(flexi_label, "ModelF7") || contains(flexi_label, "ModelF8a") || contains(flexi_label, "ModelF8")
                 # For these models, flex1 = w-reg
                 w = range(0; stop=1.0, length=length(flexi_p_repr.flex1_params))
-                flexi_values = [Model8.FlexiFunctions.evaluate_decompress(wi, flexi_p_repr.flex1_params) for wi in w]
+                flexi_values = [PulsatileModelLearning.FlexiFunctions.evaluate_decompress(wi, flexi_p_repr.flex1_params) for wi in w]
             else
                 error("Unexpected model for w-regulator flexi plotting: $flexi_label")
             end
@@ -642,11 +642,11 @@ function plot_regulator_comparison(classical_p_all, classical_label, flexi_p_rep
             if contains(flexi_label, "ModelF6") || contains(flexi_label, "ModelF8b")
                 # For these models, flex1 = a-reg
                 a = range(0; stop=1.0, length=length(flexi_p_repr.flex1_params))
-                flexi_values = [Model8.FlexiFunctions.evaluate_decompress(ai, flexi_p_repr.flex1_params) for ai in a]
+                flexi_values = [PulsatileModelLearning.FlexiFunctions.evaluate_decompress(ai, flexi_p_repr.flex1_params) for ai in a]
             elseif contains(flexi_label, "ModelF8")
                 # For ModelF8, flex2 = a-reg
                 a = range(0; stop=1.0, length=length(flexi_p_repr.flex2_params))
-                flexi_values = [Model8.FlexiFunctions.evaluate_decompress(ai, flexi_p_repr.flex2_params) for ai in a]
+                flexi_values = [PulsatileModelLearning.FlexiFunctions.evaluate_decompress(ai, flexi_p_repr.flex2_params) for ai in a]
             else
                 error("Unexpected model for a-regulator flexi plotting: $flexi_label")
             end
@@ -679,7 +679,7 @@ Create a regulator plot for a single model (classical or flexi).
 
 # Example
 ```julia
-fig = Model8.plot_single_model_regulators(
+fig = PulsatileModelLearning.plot_single_model_regulators(
     p_all_derepresented, best_p_repr;
     title="Regulator Functions"
 )
@@ -743,7 +743,7 @@ function plot_single_model_regulators(p_all_derepresented, p_repr;
         # Flexi regulator 1
         if has_flexi_reg1
             w = range(0; stop=1.0, length=length(p_repr.flex1_params))
-            flexi1 = [Model8.FlexiFunctions.evaluate_decompress(wi, p_repr.flex1_params) for wi in w]
+            flexi1 = [PulsatileModelLearning.FlexiFunctions.evaluate_decompress(wi, p_repr.flex1_params) for wi in w]
             regulator = 1 ./ (1.0 .+ abs.(flexi1))
             scatter!(ax1, w, regulator; color=:red, markersize=4, alpha=0.7)
             lines!(ax1, w, regulator; color=:red, linewidth=2,
@@ -775,7 +775,7 @@ function plot_single_model_regulators(p_all_derepresented, p_repr;
         # Flexi regulator 2
         if has_flexi_reg2
             a = range(0; stop=1.0, length=length(p_repr.flex2_params))
-            flexi2 = [Model8.FlexiFunctions.evaluate_decompress(ai, p_repr.flex2_params) for ai in a]
+            flexi2 = [PulsatileModelLearning.FlexiFunctions.evaluate_decompress(ai, p_repr.flex2_params) for ai in a]
             regulator = 1 ./ (1.0 .+ abs.(flexi2))
             scatter!(ax2, a, regulator; color=:red, markersize=4, alpha=0.7)
             lines!(ax2, a, regulator; color=:red, linewidth=2,

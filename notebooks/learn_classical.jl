@@ -1,5 +1,5 @@
 
-using Model8
+using PulsatileModelLearning
 
 # using Makie
 # using CairoMakie
@@ -32,10 +32,10 @@ my_notebook_config = Dict(
     "mask_pairs" => [[1,1],[1,2],[1,3],[1,4]],
 )
 
-my_config = Model8.get_config(ARGS, my_notebook_config)
+my_config = PulsatileModelLearning.get_config(ARGS, my_notebook_config)
 
 base_path = pwd()  # Repository root for loading experimental data
-data_path = Model8.get_experiment_data_path()  # experiments/YYMMDD/data/
+data_path = PulsatileModelLearning.get_experiment_data_path()  # experiments/YYMMDD/data/
 
 this_run_description =
     my_config["run_name"] * "_" * my_config["model_name"] * "_" * join(my_config["these_on_time_indexes"], "_")
@@ -61,17 +61,17 @@ off_times = off_times_all[my_config["these_on_time_indexes"]]
 c24_data = transpose(hcat(c24_data_all[my_config["these_on_time_indexes"]]...))
 
 # construct learning_problem context object
-model = Model8.create_model(my_config["model_name"])
+model = PulsatileModelLearning.create_model(my_config["model_name"])
 
 # construct mask that excludes certain on_time,off_time pairs from SSR, either for outlier rejection or k-fold cross-validation
-mask = Model8.generate_mask(my_config, c24_data)
+mask = PulsatileModelLearning.generate_mask(my_config, c24_data)
 
 learning_problem = LearningProblem(;
     on_times=on_times,
     off_times=off_times,
     c24_data=c24_data,
-    p_repr_lb=Model8.represent(model.p_derepresented_lowerbounds, model),
-    p_repr_ub=Model8.represent(model.p_derepresented_upperbounds, model),
+    p_repr_lb=PulsatileModelLearning.represent(model.p_derepresented_lowerbounds, model),
+    p_repr_ub=PulsatileModelLearning.represent(model.p_derepresented_upperbounds, model),
     model=model,
     continuous_pulses=my_config["continuous_pulses"],
     mask = mask,
@@ -94,8 +94,8 @@ println(my_config)
 
 println("Time for one call to get_loss:")
 
-@time loss_ig = Model8.get_loss(params_repr; learning_problem=learning_problem)
-@time loss_ig = Model8.get_loss(params_repr; learning_problem=learning_problem)
+@time loss_ig = PulsatileModelLearning.get_loss(params_repr; learning_problem=learning_problem)
+@time loss_ig = PulsatileModelLearning.get_loss(params_repr; learning_problem=learning_problem)
 
 @show loss_ig
 
@@ -110,14 +110,14 @@ end
 ## ------ Differential Evolution optimization ------ ##
 
 if my_config["maxiters_bb"] > 0
-    bbo_protocol = Model8.BBOProtocol(
+    bbo_protocol = PulsatileModelLearning.BBOProtocol(
         maxiters=my_config["maxiters_bb"],
         intermediate_save=length(my_config["these_on_time_indexes"]) > 1 ? intermediate_save : nothing,
     )
-    @time result = Model8.learn(bbo_protocol, learning_problem, params_repr)
+    @time result = PulsatileModelLearning.learn(bbo_protocol, learning_problem, params_repr)
     best_p_repr, bb_loss_history = result["parameters"], result["loss_history"]
 
-    Model8.save_learning_result(joinpath(data_path, this_run_description * "_bb.jdl2"), result, my_config, learning_problem)
+    PulsatileModelLearning.save_learning_result(joinpath(data_path, this_run_description * "_bb.jdl2"), result, my_config, learning_problem)
 
     # @show learning_problem.model
 
@@ -134,27 +134,27 @@ if my_config["maxiters_simplex"] > 0
         println("Loading initial guess from: ", data_file_name)
         @load joinpath(base_path, "data", my_config["ig_for_simplex"]["data_date"], data_file_name) best_p_repr
         ig_for_simplex = best_p_repr
-        @show Model8.get_loss(ig_for_simplex; learning_problem=learning_problem)
+        @show PulsatileModelLearning.get_loss(ig_for_simplex; learning_problem=learning_problem)
     else
         ig_for_simplex = best_p_repr # uses best from differential evolution
     end
 
     # Load simplex hyperparameters from config
-    simplex_params = Model8.load_simplex_hyperparams(my_config)
-    simplex_protocol = Model8.SimplexProtocol(
+    simplex_params = PulsatileModelLearning.load_simplex_hyperparams(my_config)
+    simplex_protocol = PulsatileModelLearning.SimplexProtocol(
         maxiters=my_config["maxiters_simplex"];
         simplex_params...
     )
-    @time result = Model8.learn(simplex_protocol, learning_problem, ig_for_simplex)
+    @time result = PulsatileModelLearning.learn(simplex_protocol, learning_problem, ig_for_simplex)
     best_p_repr, simplex_loss_history = result["parameters"], result["loss_history"]
 
-    Model8.save_learning_result(joinpath(data_path, this_run_description * "_simplex.jdl2"), result, my_config, learning_problem)
+    PulsatileModelLearning.save_learning_result(joinpath(data_path, this_run_description * "_simplex.jdl2"), result, my_config, learning_problem)
 end
 
 
 
-best_metrics = Model8.get_metrics(best_p_repr; learning_problem=learning_problem)
+best_metrics = PulsatileModelLearning.get_metrics(best_p_repr; learning_problem=learning_problem)
 println("Best metrics:")
-Model8.print_metrics(best_metrics)
+PulsatileModelLearning.print_metrics(best_metrics)
 println("Best parameters:")
 print(best_p_repr)

@@ -1,4 +1,4 @@
-module Model8
+module PulsatileModelLearning
 
 # using JunTools
 using XLSX
@@ -223,4 +223,4 @@ include("generate_masks.jl")
 include("plotting.jl")
 include("timeseries_analysis.jl")
 
-end # module Model8
+end # module PulsatileModelLearning

@@ -22,7 +22,7 @@ function _get_freq_response_fast_path(on_times, off_times, p_derepresented, mode
     for (idx_on_time, on_time) in enumerate(on_times)
         for (idx_off_time, off_time) in enumerate(off_times[idx_on_time])
             i_func = t -> i_pulses(t, on_time, off_time; continuous_pulses=continuous_pulses)
-            rhs = Model8.make_rhs(i_func, model)
+            rhs = PulsatileModelLearning.make_rhs(i_func, model)
             prob = ODEProblem(rhs, model.u0, [0.0, 24 * 60.0])
             ode_solution = solve(prob, Vern9(); p=p_derepresented, abstol=1e-8, reltol=1e-8)
 
@@ -53,7 +53,7 @@ function _get_freq_response_with_analysis(on_times, off_times, p_derepresented, 
     for (idx_on_time, on_time) in enumerate(on_times)
         for (idx_off_time, off_time) in enumerate(off_times[idx_on_time])
             i_func = t -> i_pulses(t, on_time, off_time; continuous_pulses=continuous_pulses)
-            rhs = Model8.make_rhs(i_func, model)
+            rhs = PulsatileModelLearning.make_rhs(i_func, model)
             prob = ODEProblem(rhs, model.u0, [0.0, 24 * 60.0])
 
             ode_solution = solve(prob, Vern9(); p=p_derepresented, abstol=1e-8, reltol=1e-8)

@@ -37,8 +37,8 @@ Default limit of 300 figures prevents excessive output.
 
 # Example
 ```julia
-selection = Model8.all_timeseries_selection(save_formats=[:pdf, :png])
-selection_unlimited = Model8.all_timeseries_selection(max_count=nothing)  # No limit
+selection = PulsatileModelLearning.all_timeseries_selection(save_formats=[:pdf, :png])
+selection_unlimited = PulsatileModelLearning.all_timeseries_selection(max_count=nothing)  # No limit
 ```
 """
 function all_timeseries_selection(; save_formats=[:pdf], max_count=300)
@@ -101,7 +101,7 @@ function compute_global_extrema(on_times, off_times, p_derepresented, model; con
     for (idx_on_time, on_time) in enumerate(on_times)
         for (idx_off_time, off_time) in enumerate(off_times[idx_on_time])
             i_func = t -> i_pulses(t, on_time, off_time; continuous_pulses=continuous_pulses)
-            rhs = Model8.make_rhs(i_func, model)
+            rhs = PulsatileModelLearning.make_rhs(i_func, model)
             prob = ODEProblem(rhs, model.u0, [0.0, 24 * 60.0])
             ode_solution = solve(prob, Vern9(); p=p_derepresented, abstol=1e-8, reltol=1e-8)
             
@@ -181,7 +181,7 @@ function Base.iterate(gen::TimeseriesGenerator, state=(1, 1, 1))
     
     # Solve ODE
     i_func = t -> i_pulses(t, on_time, off_time; continuous_pulses=gen.continuous_pulses)
-    rhs = Model8.make_rhs(i_func, gen.model)
+    rhs = PulsatileModelLearning.make_rhs(i_func, gen.model)
     prob = ODEProblem(rhs, gen.model.u0, [0.0, 24 * 60.0])
     ode_solution = solve(prob, Vern9(); p=gen.p_derepresented, abstol=1e-8, reltol=1e-8)
     

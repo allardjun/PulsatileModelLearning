@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# End-to-end test script for Model8 learning pipeline
+# End-to-end test script for PulsatileModelLearning learning pipeline
 # This script automates the complete workflow without manual editing
 
 set -e  # Exit on any error
@@ -28,12 +28,12 @@ trap cleanup EXIT
 echo ""
 echo "Step 1/4: Running classical learning..."
 echo "----------------------------------------"
-julia --threads=4 --project=Model8 notebooks/learn_classical.jl configs/test_classical.toml
+julia --threads=4 --project=PulsatileModelLearning notebooks/learn_classical.jl configs/test_classical.toml
 
 echo ""
 echo "Step 2/4: Analyzing classical results..."
 echo "----------------------------------------"
-julia --threads=4 --project=Model8 notebooks/analyze_task5a_deep_winner.jl test_classical $YYMMDD simplex
+julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_task5a_deep_winner.jl test_classical $YYMMDD simplex
 
 echo ""
 echo "Step 3/4: Running corduroy learning..."
@@ -42,12 +42,12 @@ echo "Generating temporary corduroy config with date: $YYMMDD"
 sed "s/REPLACE_WITH_TEST_CLASSICAL_DATE/$YYMMDD/g" configs/test_corduroy.toml > "$TEMP_CONFIG"
 
 echo "Running corduroy learning with config: $TEMP_CONFIG"
-julia --threads=4 --project=Model8 notebooks/learn_corduroy.jl "$TEMP_CONFIG"
+julia --threads=4 --project=PulsatileModelLearning notebooks/learn_corduroy.jl "$TEMP_CONFIG"
 
 echo ""
 echo "Step 4/4: Analyzing corduroy results..."
 echo "---------------------------------------"
-julia --threads=4 --project=Model8 notebooks/analyze_task5a_deep_winner.jl test_corduroy $YYMMDD corduroy
+julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_task5a_deep_winner.jl test_corduroy $YYMMDD corduroy
 
 echo ""
 echo "========================================"

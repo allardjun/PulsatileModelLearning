@@ -26,7 +26,7 @@ function generate_kfold_masks(shape::Tuple{Int, Int}, k::Int)
     return #masks
 
     # Example usage:
-    #Model8.generate_kfold_masks((6, 14), 7)
+    #PulsatileModelLearning.generate_kfold_masks((6, 14), 7)
 
 end
 

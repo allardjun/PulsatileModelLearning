@@ -1,4 +1,4 @@
-using Model8
+using PulsatileModelLearning
 using Makie
 using CairoMakie
 using JLD2
@@ -80,7 +80,7 @@ end
 # Setup paths
 base_path = pwd()  # Repository root for loading experimental data
 data_path = joinpath(base_path, "experiments", data_date, "data")  # experiments/YYMMDD/data/ for saved results
-plot_path = Model8.get_experiment_plot_path()  # experiments/YYMMDD/plots/ for current analysis
+plot_path = PulsatileModelLearning.get_experiment_plot_path()  # experiments/YYMMDD/plots/ for current analysis
 
 # Load experimental data for error bars
 @load joinpath(base_path, "data/Harris_data_CD69.jld2") data
@@ -123,7 +123,7 @@ else
 end
 
 # Load using unified interface
-result, my_config, learning_problem = Model8.load_learning_result(file_path)
+result, my_config, learning_problem = PulsatileModelLearning.load_learning_result(file_path)
 
 # Subset c24stdev data to match the on_time_indexes used in this run
 c24stdev = c24stdev_all[these_on_time_indexes]
@@ -158,30 +158,30 @@ loss_history = Dict(learning_algo => loss_history_this_algo)
 
 # Check parameter bounds
 dataset_desc = length(these_on_time_indexes) == 6 ? "all_datasets" : "dataset_$(join(these_on_time_indexes, "_"))"
-bound_violations = Model8.check_parameter_bounds(best_p_repr, learning_problem.model, model_name, dataset_desc)
+bound_violations = PulsatileModelLearning.check_parameter_bounds(best_p_repr, learning_problem.model, model_name, dataset_desc)
 
 if isempty(bound_violations)
     println("All parameters within bounds.")
 end
 
-metrics = Model8.get_metrics(best_p_repr; learning_problem)
-Model8.print_metrics(metrics)
+metrics = PulsatileModelLearning.get_metrics(best_p_repr; learning_problem)
+PulsatileModelLearning.print_metrics(metrics)
 
-Model8.get_loss(best_p_repr; learning_problem=learning_problem)
+PulsatileModelLearning.get_loss(best_p_repr; learning_problem=learning_problem)
 
 println("Time to evaluate get_loss() at best_p_repr:")
-@time Model8.get_loss(best_p_repr; learning_problem=learning_problem)
-@time Model8.get_loss(best_p_repr; learning_problem=learning_problem)
-@time Model8.get_loss(best_p_repr; learning_problem=learning_problem)
+@time PulsatileModelLearning.get_loss(best_p_repr; learning_problem=learning_problem)
+@time PulsatileModelLearning.get_loss(best_p_repr; learning_problem=learning_problem)
+@time PulsatileModelLearning.get_loss(best_p_repr; learning_problem=learning_problem)
 
 # ================================================================
 # FREQUENCY RESPONSE ANALYSIS
 # ================================================================
 
-p_all_derepresented = Model8.derepresent_all(best_p_repr, learning_problem.model)
+p_all_derepresented = PulsatileModelLearning.derepresent_all(best_p_repr, learning_problem.model)
 
 # Create frequency response plot using reusable function
-@time fig = Model8.plot_frequency_response(
+@time fig = PulsatileModelLearning.plot_frequency_response(
     learning_problem, 
     p_all_derepresented; 
     refined_off_times=true, 
@@ -254,7 +254,7 @@ end
 # ================================================================
 
 # Create regulator plot using reusable function from plotting.jl
-fig_regulator = Model8.plot_single_model_regulators(
+fig_regulator = PulsatileModelLearning.plot_single_model_regulators(
     p_all_derepresented, 
     best_p_repr;
     title="Regulator Functions: $model_name"
@@ -291,7 +291,7 @@ save_pairs = [
 # save_pairs = nothing  # Use this for complete analysis (up to 700 figures)
 
 # Create selection configuration for the new interface
-selection = Model8.TimeseriesSelection(
+selection = PulsatileModelLearning.TimeseriesSelection(
     save_pairs,                    # Which (on_time, off_time) pairs to save
     [:pdf, :png],                  # Save both PDF and PNG formats
     700                            # Limit to 700 figures to prevent excessive output
@@ -312,14 +312,14 @@ end
 
 # Create refined off_times for smooth analysis (200 points for smooth movies)
 # This creates 200 linearly spaced points between min/max of each on_time's off_times
-refined_off_times = Model8.create_refined_off_times(learning_problem, 200)
+refined_off_times = PulsatileModelLearning.create_refined_off_times(learning_problem, 200)
 
 # Alternative: Use original sparse off_times for analysis that matches experimental data
 # sparse_off_times = learning_problem.off_times  
 # Then save_pairs would refer to indices in the sparse experimental arrays
 
 # CLEAN TIMESERIES GENERATION - now with flexible off_times selection!
-@time results = Model8.analyze_and_save_timeseries(learning_problem, p_all_derepresented, refined_off_times; selection=selection) do metadata, fig
+@time results = PulsatileModelLearning.analyze_and_save_timeseries(learning_problem, p_all_derepresented, refined_off_times; selection=selection) do metadata, fig
     # Save PDF for selected pairs
     if metadata.save_pdf
         save(joinpath(plot_path, this_run_description * "_$(learning_algo)_1timeseries_$(metadata.linear_index).pdf"), fig)
@@ -405,7 +405,7 @@ println("New continuous_pulses: $(continuous_learning_problem.continuous_pulses)
 println("\nGenerating frequency response with continuous_pulses=true...")
 
 # Create frequency response plot using reusable function
-@time fig_continuous_freq = Model8.plot_frequency_response(
+@time fig_continuous_freq = PulsatileModelLearning.plot_frequency_response(
     continuous_learning_problem, 
     p_all_derepresented; 
     refined_off_times=true, 
@@ -429,17 +429,17 @@ continuous_movie_path = joinpath(plot_path, "movie_continuous")
 mkpath(continuous_movie_path)
 
 # Create selection configuration for continuous pulses (reuse same selection as regular analysis)
-continuous_selection = Model8.TimeseriesSelection(
+continuous_selection = PulsatileModelLearning.TimeseriesSelection(
     save_pairs,                       # Same selection as regular analysis (nothing = all pairs)
     [:pdf, :png],                     # Save both PDF and PNG formats
     700                               # Limit to 700 figures to prevent excessive output
 )
 
 # Create refined off_times for continuous pulses (reuse same refined array)
-continuous_refined_off_times = Model8.create_refined_off_times(continuous_learning_problem, 200)
+continuous_refined_off_times = PulsatileModelLearning.create_refined_off_times(continuous_learning_problem, 200)
 
 # CLEAN CONTINUOUS TIMESERIES GENERATION - using new interface with refined off_times
-@time continuous_results = Model8.analyze_and_save_timeseries(continuous_learning_problem, p_all_derepresented, continuous_refined_off_times; selection=continuous_selection) do metadata, fig
+@time continuous_results = PulsatileModelLearning.analyze_and_save_timeseries(continuous_learning_problem, p_all_derepresented, continuous_refined_off_times; selection=continuous_selection) do metadata, fig
     # Save PDF for selected pairs with continuous_pulses suffix
     if metadata.save_pdf
         save(joinpath(plot_path, this_run_description * "_$(learning_algo)_1timeseries_$(metadata.linear_index)_continuous_pulses.pdf"), fig)
