@@ -33,7 +33,7 @@ julia --threads=4 --project=PulsatileModelLearning notebooks/learn_classical.jl 
 echo ""
 echo "Step 2/4: Analyzing classical results..."
 echo "----------------------------------------"
-julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_task5a_deep_winner.jl test_classical $YYMMDD simplex
+julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_learning_results.jl test_classical $YYMMDD simplex
 
 echo ""
 echo "Step 3/4: Running corduroy learning..."
@@ -47,7 +47,7 @@ julia --threads=4 --project=PulsatileModelLearning notebooks/learn_corduroy.jl "
 echo ""
 echo "Step 4/4: Analyzing corduroy results..."
 echo "---------------------------------------"
-julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_task5a_deep_winner.jl test_corduroy $YYMMDD corduroy
+julia --threads=4 --project=PulsatileModelLearning notebooks/analyze_learning_results.jl test_corduroy $YYMMDD corduroy
 
 echo ""
 echo "========================================"

@@ -4,7 +4,7 @@
 
 module FlexiFunctions
 
-using Zygote
+# using Zygote
 
 # export evaluate_decompress, evaluate_decompress_O2, generate_flexi_ig
 
