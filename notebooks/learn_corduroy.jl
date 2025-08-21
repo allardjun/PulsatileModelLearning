@@ -1,6 +1,5 @@
 
 using Model8
-using JunTools
 
 # using Makie
 # using CairoMakie
@@ -61,8 +60,8 @@ my_notebook_config = Dict(
 
 my_config = Model8.get_config(ARGS, my_notebook_config)
 
-base_path = JunTools.get_base_path("TCRPulsing")
-data_path = JunTools.get_data_path("TCRPulsing")
+base_path = pwd()  # Repository root for loading experimental data
+data_path = Model8.get_experiment_data_path()  # experiments/YYMMDD/data/
 
 this_run_description =
     my_config["run_name"] * "_" * my_config["model_name"] * "_" * join(my_config["these_on_time_indexes"], "_")
@@ -142,7 +141,7 @@ if my_config["maxiters_outer"] > 0
         file_regex = Regex("^" * escape_string(file_prefix) * "(_job\\d+)?" * escape_string(file_suffix) * "\$")
         
         # Find matching files in the data directory
-        data_path_for_search = joinpath(base_path, "data", my_config["ig_for_cmaes"]["data_date"])
+        data_path_for_search = joinpath(base_path, "experiments", my_config["ig_for_cmaes"]["data_date"], "data")
         
         if !isdir(data_path_for_search)
             error("Data directory does not exist: $data_path_for_search")
@@ -162,7 +161,7 @@ if my_config["maxiters_outer"] > 0
         
         # Use unified loading interface
         source_result, source_config, source_learning_problem = Model8.load_learning_result(
-            joinpath(base_path, "data", my_config["ig_for_cmaes"]["data_date"], data_file_name)
+            joinpath(base_path, "experiments", my_config["ig_for_cmaes"]["data_date"], "data", data_file_name)
         )
         
         best_p_repr = source_result["parameters"]

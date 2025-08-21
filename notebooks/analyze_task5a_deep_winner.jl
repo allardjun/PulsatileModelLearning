@@ -1,5 +1,4 @@
 using Model8
-using JunTools
 using Makie
 using CairoMakie
 using JLD2
@@ -79,9 +78,9 @@ end
 # ================================================================
 
 # Setup paths
-base_path = JunTools.get_base_path("TCRPulsing")
-data_path = joinpath(base_path, "data", data_date)
-plot_path = JunTools.get_plot_path("TCRPulsing")
+base_path = pwd()  # Repository root for loading experimental data
+data_path = joinpath(base_path, "experiments", data_date, "data")  # experiments/YYMMDD/data/ for saved results
+plot_path = Model8.get_experiment_plot_path()  # experiments/YYMMDD/plots/ for current analysis
 
 # Load experimental data for error bars
 @load joinpath(base_path, "data/Harris_data_CD69.jld2") data

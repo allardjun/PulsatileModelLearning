@@ -1,5 +1,6 @@
 
-# For now, just run it in the repl...
+# Run it in the repl:
+# Model8.get_data(save_data=true)
 
 function get_data(; save_data=false)
     

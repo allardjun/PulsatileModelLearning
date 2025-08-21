@@ -12,7 +12,7 @@ echo "Starting end-to-end test for date: $YYMMDD"
 echo "========================================"
 
 # Set up paths and temporary files
-TEMP_CONFIG="tests/test_corduroy_$YYMMDD.toml"
+TEMP_CONFIG="scripts/test_corduroy_$YYMMDD.toml"
 
 # Function to cleanup on exit
 cleanup() {

@@ -50,10 +50,32 @@ include("ModelConversion.jl")
 using .FlexiFunctions
 using .ModelConversion
 
-base_path = ""
-# base_path = JunTools.get_base_path("TCRPulsing")
+# Path management functions to replace JunTools
+function get_experiment_base_path(date_string::String="")
+    if isempty(date_string)
+        date_string = Dates.format(Dates.today(), "yymmdd")
+    end
+    experiment_dir = joinpath(pwd(), "experiments", date_string)
+    mkpath(experiment_dir)
+    return experiment_dir
+end
 
-#export base_path
+function get_experiment_data_path(date_string::String="")
+    base_dir = get_experiment_base_path(date_string)
+    data_dir = joinpath(base_dir, "data")
+    mkpath(data_dir)
+    return data_dir
+end
+
+function get_experiment_plot_path(date_string::String="")
+    base_dir = get_experiment_base_path(date_string)
+    plot_dir = joinpath(base_dir, "plots")
+    mkpath(plot_dir)
+    return plot_dir
+end
+
+# Export path functions
+export get_experiment_base_path, get_experiment_data_path, get_experiment_plot_path
 
 export LearningProblem
 

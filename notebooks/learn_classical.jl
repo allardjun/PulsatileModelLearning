@@ -1,6 +1,5 @@
 
 using Model8
-using JunTools
 
 # using Makie
 # using CairoMakie
@@ -35,8 +34,8 @@ my_notebook_config = Dict(
 
 my_config = Model8.get_config(ARGS, my_notebook_config)
 
-base_path = JunTools.get_base_path("TCRPulsing")
-data_path = JunTools.get_data_path("TCRPulsing")
+base_path = pwd()  # Repository root for loading experimental data
+data_path = Model8.get_experiment_data_path()  # experiments/YYMMDD/data/
 
 this_run_description =
     my_config["run_name"] * "_" * my_config["model_name"] * "_" * join(my_config["these_on_time_indexes"], "_")
