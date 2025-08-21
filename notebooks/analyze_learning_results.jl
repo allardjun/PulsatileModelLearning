@@ -189,7 +189,7 @@ p_all_derepresented = PulsatileModelLearning.derepresent_all(best_p_repr, learni
     c24stdev=c24stdev
 )
 
-display(fig)
+# display(fig)
 save(joinpath(plot_path, this_run_description * "_frequency_response_$(learning_algo).pdf"), fig)
 
 # ================================================================
@@ -215,7 +215,7 @@ if !isnothing(loss_history[learning_algo]) && learning_algo != "corduroy"
     Makie.hlines!(ax, [HARRIS_STDEV_THRESHOLD]; color=:gray, linestyle=:dash)
     ax.yscale = log10
 
-    display(fig_loss_history)
+    # display(fig_loss_history)
     save(joinpath(plot_path, this_run_description * "_loss_history_$(learning_algo).pdf"), fig_loss_history)
 
     display(p_all_derepresented.p_classical)
@@ -244,7 +244,7 @@ if learning_algo == "corduroy"
     ax.yscale = log10
 
 
-    display(fig_loss_history)
+    # display(fig_loss_history)
     save(joinpath(plot_path, this_run_description * "_loss_history_$(learning_algo).pdf"), fig_loss_history)
 
 end
@@ -260,7 +260,7 @@ fig_regulator = PulsatileModelLearning.plot_single_model_regulators(
     title="Regulator Functions: $model_name"
 )
 
-display(fig_regulator)
+# display(fig_regulator)
 save(joinpath(plot_path, this_run_description * "_$(learning_algo)_regulator.pdf"), fig_regulator)
 
 # ================================================================
@@ -332,7 +332,7 @@ refined_off_times = PulsatileModelLearning.create_refined_off_times(learning_pro
 end
 
 # Save the extrema plot
-display(results.extrema_fig)
+# display(results.extrema_fig)
 save(joinpath(plot_path, this_run_description * "_$(learning_algo)_extrema.pdf"), results.extrema_fig)
 
 println("Processed $(results.num_figures) time series figures")
@@ -414,7 +414,7 @@ println("\nGenerating frequency response with continuous_pulses=true...")
     show_data=false  # Hide experimental data for continuous pulses
 )
 
-display(fig_continuous_freq)
+# display(fig_continuous_freq)
 save(joinpath(plot_path, this_run_description * "_frequency_response_$(learning_algo)_continuous_pulses.pdf"), fig_continuous_freq)
 println("Continuous pulses frequency response saved")
 
@@ -452,7 +452,7 @@ continuous_refined_off_times = PulsatileModelLearning.create_refined_off_times(c
 end
 
 # Save the extrema plot for continuous pulses
-display(continuous_results.extrema_fig)
+# display(continuous_results.extrema_fig)
 save(joinpath(plot_path, this_run_description * "_$(learning_algo)_extrema_continuous_pulses.pdf"), continuous_results.extrema_fig)
 
 println("Processed $(continuous_results.num_figures) continuous pulses time series figures")
@@ -471,14 +471,16 @@ function print_continuous_ffmpeg_command(plot_path, this_run_description, learni
     
     # Construct the ffmpeg command
     ffmpeg_command = """
-    /opt/homebrew/bin/ffmpeg -framerate $framerate -i "$input_pattern" -c:v libx264 -pix_fmt yuv420p -crf 18 "$output_movie_path"
+    ffmpeg -framerate $framerate -i "$input_pattern" -c:v libx264 -pix_fmt yuv420p -crf 18 "$output_movie_path"
     """
+        # /opt/homebrew/bin/ffmpeg -framerate $framerate -i "$input_pattern" -c:v libx264 -pix_fmt yuv420p -crf 18 "$output_movie_path"
+
     
     println("Copy and paste this command into your terminal:")
     println("----------------------------------------------")
     println(ffmpeg_command)
     println("----------------------------------------------")
-    println("This will create a continuous pulses movie from $(num_frames) frames at $(framerate) fps")
+    println("If you have ffmpeg installed and in path, this will create a continuous pulses movie from $(num_frames) frames at $(framerate) fps")
     println("Output will be saved to: $output_movie_path")
     
     return nothing

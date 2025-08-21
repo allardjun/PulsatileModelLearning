@@ -9,12 +9,12 @@ using JLD2
 using Random
 using LibGit2
 
-using Zygote
+# using Zygote
 
-using SciMLSensitivity
+# using SciMLSensitivity
 
-using Infiltrator # for debugging
-Infiltrator.toggle_async_check(false)
+# using Infiltrator # for debugging
+# Infiltrator.toggle_async_check(false)
 
 seed = rand(UInt)#52215207017607922#rand(UInt)
 println("Random seed: $seed")

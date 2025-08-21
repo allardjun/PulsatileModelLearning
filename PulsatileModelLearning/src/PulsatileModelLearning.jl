@@ -23,11 +23,11 @@ using Optim
 # using OptimizationGCMAES
 using OptimizationEvolutionary
 
-using Zygote # used in pre-training flexis after a classical run
+# using Zygote # used in pre-training flexis after a classical run
 
 # using ForwardDiff
 # using Enzyme
-using SciMLSensitivity
+# using SciMLSensitivity
 
 # using LineSearches
 
@@ -35,11 +35,11 @@ using Dates
 
 using TOML
 
-using InteractiveUtils
-using Logging
-using Infiltrator
+# using InteractiveUtils
+# using Logging
+# using Infiltrator
 
-using Sundials
+# using Sundials
 using LinearAlgebra
 
 using Random
