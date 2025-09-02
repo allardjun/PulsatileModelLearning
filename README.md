@@ -1,14 +1,14 @@
 # PulsatileModelLearning
 
 A Julia package for learning and analyzing pulsatile signaling models in T Cell Receptor signaling dynamics.
-See associated manuscript at [TO DO](link).
+See associated manuscript Allard, "Improvement in model flexibility reveals a minimal signalling pathway that explains T cell responses to pulsatile stimuli" on [biorxiv](https://www.biorxiv.org/content/10.1101/2025.08.28.672930v1).
 
 This project implements computational models to understand how cells process pulsatile (on-off) signals. The package provides:
 
 - **Multiple model architectures**: Linear models, incoherent feedforward loops (IFFL), and flexible function models
 - **Optimization algorithms**: Differential evolution, CMA-ES, and Rowan's simplex methods
 - **Comprehensive analysis**: Frequency response analysis, time series visualization, and parameter optimization
-- **Experimental data integration**: Analysis against CD69 expression data from Harris et al. (2020)
+- **Experimental data integration**: Analysis against CD69 expression data from [Harris et al. (2020)](https://www.embopress.org/doi/full/10.15252/msb.202010091)
 
 
 ## Quick Start
