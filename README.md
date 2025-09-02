@@ -1,7 +1,7 @@
 # PulsatileModelLearning
 
 A Julia package for learning and analyzing pulsatile signaling models in T Cell Receptor signaling dynamics.
-See associated manuscript Allard, "Improvement in model flexibility reveals a minimal signalling pathway that explains T cell responses to pulsatile stimuli" on [biorxiv](https://www.biorxiv.org/content/10.1101/2025.08.28.672930v1).
+See associated manuscript __Allard, *"Improvement in model flexibility reveals a minimal signalling pathway that explains T cell responses to pulsatile stimuli"*__ on [biorxiv](https://www.biorxiv.org/content/10.1101/2025.08.28.672930v1).
 
 This project implements computational models to understand how cells process pulsatile (on-off) signals. The package provides:
 
